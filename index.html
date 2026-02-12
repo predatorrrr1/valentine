@@ -28,17 +28,14 @@
             font-family: 'Poppins', sans-serif;
             background: var(--bg-gradient);
             min-height: 100vh;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            overflow-x: hidden;
             color: var(--text-color);
             perspective: 1000px;
         }
 
         /* Particle Background */
         #particles {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -86,7 +83,8 @@
             display: none;
             flex-direction: column;
             align-items: center;
-            max-height: 95vh;
+            margin: 2rem auto;
+            max-height: 90vh;
             overflow-y: auto;
         }
 
@@ -119,8 +117,9 @@
                 font-size: 2.5rem;
             }
             .container {
-                padding: 1rem;
+                padding: 1.5rem;
                 margin: 1rem;
+                max-height: 95vh;
             }
         }
 
@@ -189,7 +188,7 @@
             border-radius: 2px;
         }
 
-        /* Love Letter - MOBILE SCROLL FRIENDLY */
+        /* Love Letter - MOBILE OPTIMIZED */
         .letter-content {
             font-family: 'Dancing Script', cursive;
             font-size: 1.6rem;
@@ -199,12 +198,11 @@
             padding: 25px;
             border-radius: 5px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            min-height: 200px;
-            position: relative;
+            margin: 10px 0;
             flex: 1;
             overflow-y: auto;
             max-height: 60vh;
+            min-height: 200px;
         }
 
         .gujarati-bold {
@@ -223,24 +221,35 @@
             }
         }
 
-        /* MOBILE FIXES */
+        /* MOBILE OPTIMIZATIONS */
         @media (max-width: 768px) {
             .letter-content {
                 font-size: 1.3rem !important;
                 max-height: 50vh !important;
-                overflow-y: auto !important;
                 padding: 15px !important;
             }
             
-            .container#screen-letter {
+            #screen-letter {
                 padding: 1rem !important;
                 justify-content: flex-start !important;
             }
             
             h1 {
                 font-size: 2rem !important;
-                margin-bottom: 1rem !important;
+                margin-bottom: 0.5rem !important;
             }
+            
+            .btn {
+                padding: 10px 25px !important;
+                font-size: 1rem !important;
+            }
+        }
+
+        /* Letter screen specific button positioning */
+        #letter-next-btn {
+            margin: 15px 0 !important;
+            width: 100% !important;
+            order: -1; /* Moves button to top */
         }
 
         /* Interactive Proposal Buttons */
@@ -308,14 +317,14 @@
         <button class="btn" onclick="nextScreen('screen-letter')">Next -></button>
     </div>
 
-    <!-- Screen 3: Letter (BUTTON AT TOP + MOBILE SCROLLABLE) -->
+    <!-- Screen 3: Letter (BUTTON MOVED TO TOP) -->
     <div class="container" id="screen-letter">
-        <h1>For You... 💌</h1>
-        
-        <!-- BUTTON MOVED TO TOP -->
-        <button class="btn" id="letter-next-btn" style="opacity: 0; pointer-events: none; margin: 15px 0 20px 0; width: 100%;">
+        <!-- BUTTON AT TOP -->
+        <button class="btn" id="letter-next-btn" style="opacity: 0; pointer-events: none;">
             One Last Thing...
         </button>
+        
+        <h1>For You... 💌</h1>
         
         <div class="letter-content">
             <span id="typewriter-text"></span><span class="cursor"></span>
@@ -352,7 +361,7 @@
 
         const loveLetterText = "Dearest Love of my life, my eyes were created only to search for your beautiful face in every corner of this world, my ears were blessed just so they could melt at the sound of your sweet voice, ";
         const gujaratiText = "jevi ritna Radha Ji e emni drashti kholi hati tyare j jyare Bhagwan Shri Krishna Ji no janam thayo hato evi j ritna tamara aagman thi mari prem ni drashti khuli che";
-        const restText = ", and just like that divine moment, your arrival awakened a love in me I never knew existed — because of you, I am not the same person anymore… you have transformed me, my heart, and my entire world into something magical and full of love. 💖, I have a very important question...";
+        const restText = ", and just like that divine moment, your arrival awakened a love in me I never knew existed because of you, I am not the same person anymore… you have transformed me, my heart, and my entire world into something magical and full of love. 💖, I have a very important question...";
         
         /* --------------------- */
 
@@ -380,173 +389,4 @@
                 target.classList.add('active');
             }
 
-            if (targetId === 'screen-intro') {
-                playMusic();
-            }
-            if (targetId === 'screen-letter') {
-                startTypewriter();
-            }
-        }
-
-        // Music Control
-        const music = document.getElementById('bgMusic');
-        let isPlaying = false;
-
-        function toggleMusic() {
-            if (!music) return;
-            if (isPlaying) {
-                music.pause();
-                isPlaying = false;
-            } else {
-                music.play().then(() => {
-                    isPlaying = true;
-                }).catch(e => console.log("Auto-play blocked"));
-            }
-        }
-
-        function playMusic() {
-            if (!music || isPlaying) return;
-            music.play().then(() => {
-                isPlaying = true;
-            }).catch(e => console.log("Auto-play blocked"));
-        }
-
-        // Typewriter Effect WITH BOLD GUJARATI
-        let charIndex = 0;
-        let phase = 0; // 0: first part, 1: gujarati, 2: rest
-
-        function startTypewriter() {
-            const elem = document.getElementById('typewriter-text');
-            if (!elem) return;
-            elem.innerHTML = "";
-            charIndex = 0;
-            phase = 0;
-            type();
-        }
-
-        function type() {
-            let currentText = '';
-            
-            if (phase === 0 && charIndex < loveLetterText.length) {
-                // Type first part normally
-                currentText = loveLetterText.charAt(charIndex);
-                document.getElementById('typewriter-text').innerHTML += currentText;
-                charIndex++;
-                setTimeout(type, 50);
-            } 
-            else if (phase === 1 && charIndex < gujaratiText.length) {
-                // Type Gujarati BOLD
-                currentText = gujaratiText.charAt(charIndex);
-                document.getElementById('typewriter-text').innerHTML += `<span class="gujarati-bold">${currentText}</span>`;
-                charIndex++;
-                setTimeout(type, 40);
-            }
-            else if (phase === 2 && charIndex < restText.length) {
-                // Type rest normally
-                currentText = restText.charAt(charIndex);
-                document.getElementById('typewriter-text').innerHTML += currentText;
-                charIndex++;
-                setTimeout(type, 50);
-            }
-            else {
-                // Move to next phase
-                if (phase === 0) {
-                    phase = 1;
-                    charIndex = 0;
-                    setTimeout(type, 300);
-                } else if (phase === 1) {
-                    phase = 2;
-                    charIndex = 0;
-                    setTimeout(type, 500);
-                } else {
-                    // All done - show button
-                    const btn = document.getElementById('letter-next-btn');
-                    if (btn) {
-                        btn.style.opacity = '1';
-                        btn.style.pointerEvents = 'auto';
-                    }
-                }
-            }
-        }
-
-        // "No" Button Interaction
-        let dodgeCount = 0;
-        function dodgeButton() {
-            const btn = document.getElementById('noBtn');
-            if (!btn) return;
-
-            const phrases = [
-                "No 😢", "Are you sure?", "Really?", "Think again!",
-                "Don't break my heart 💔", "Please? 🥺", "Last chance!",
-                "You can't say no!", "I'll give you cookies 🍪", "But I love you! ❤️"
-            ];
-
-            if (dodgeCount > 20) return;
-
-            const maxX = window.innerWidth - btn.offsetWidth - 20;
-            const maxY = window.innerHeight - btn.offsetHeight - 20;
-
-            const x = Math.random() * maxX + 10;
-            const y = Math.random() * maxY + 10;
-
-            btn.style.position = 'fixed';
-            btn.style.left = x + 'px';
-            btn.style.top = y + 'px';
-            btn.style.zIndex = '1000';
-
-            btn.innerText = phrases[dodgeCount % phrases.length];
-            dodgeCount++;
-        }
-
-        // "Yes" Action & Email Notification
-        function acceptProposal() {
-            nextScreen('screen-celebration');
-            triggerConfetti();
-            sendNotification();
-        }
-
-        function sendNotification() {
-            fetch(`https://formsubmit.co/ajax/${YOUR_EMAIL}`, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    subject: "SHE SAID YES! 💖",
-                    message: "Congratulations! Your Valentine accepted the proposal on your website! 💍✨",
-                    timestamp: new Date().toLocaleString()
-                })
-            })
-            .then(response => response.json())
-            .then(data => console.log("Email sent successfully", data))
-            .catch(error => console.error("Error sending email", error));
-        }
-
-        // Confetti
-        function triggerConfetti() {
-            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'];
-            for (let i = 0; i < 150; i++) {
-                const confetti = document.createElement('div');
-                confetti.style.position = 'fixed';
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.top = '-10px';
-                confetti.style.width = '10px';
-                confetti.style.height = '10px';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.zIndex = '1000';
-                document.body.appendChild(confetti);
-
-                confetti.animate([
-                    { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
-                    { transform: `translateY(100vh) rotate(${Math.random() * 720}deg)`, opacity: 0 }
-                ], {
-                    duration: Math.random() * 2000 + 3000,
-                    easing: 'linear',
-                    fill: 'forwards'
-                });
-            }
-        }
-    </script>
-</body>
-</html>
+            if (targetId === 'screen
