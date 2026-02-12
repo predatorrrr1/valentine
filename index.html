@@ -86,6 +86,8 @@
             display: none;
             flex-direction: column;
             align-items: center;
+            max-height: 95vh;
+            overflow-y: auto;
         }
 
         .container.active {
@@ -117,7 +119,8 @@
                 font-size: 2.5rem;
             }
             .container {
-                padding: 1.5rem;
+                padding: 1rem;
+                margin: 1rem;
             }
         }
 
@@ -152,7 +155,7 @@
             box-shadow: 0 8px 25px rgba(255, 51, 102, 0.6);
         }
 
-        /* Photo Gallery (keep original 120px height) */
+        /* Photo Gallery */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -186,7 +189,7 @@
             border-radius: 2px;
         }
 
-        /* Love Letter */
+        /* Love Letter - MOBILE SCROLL FRIENDLY */
         .letter-content {
             font-family: 'Dancing Script', cursive;
             font-size: 1.6rem;
@@ -199,6 +202,9 @@
             margin-bottom: 20px;
             min-height: 200px;
             position: relative;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 60vh;
         }
 
         .gujarati-bold {
@@ -214,6 +220,26 @@
         @keyframes blink {
             50% {
                 opacity: 0;
+            }
+        }
+
+        /* MOBILE FIXES */
+        @media (max-width: 768px) {
+            .letter-content {
+                font-size: 1.3rem !important;
+                max-height: 50vh !important;
+                overflow-y: auto !important;
+                padding: 15px !important;
+            }
+            
+            .container#screen-letter {
+                padding: 1rem !important;
+                justify-content: flex-start !important;
+            }
+            
+            h1 {
+                font-size: 2rem !important;
+                margin-bottom: 1rem !important;
             }
         }
 
@@ -282,14 +308,18 @@
         <button class="btn" onclick="nextScreen('screen-letter')">Next -></button>
     </div>
 
-    <!-- Screen 3: Letter -->
+    <!-- Screen 3: Letter (BUTTON AT TOP + MOBILE SCROLLABLE) -->
     <div class="container" id="screen-letter">
         <h1>For You... 💌</h1>
+        
+        <!-- BUTTON MOVED TO TOP -->
+        <button class="btn" id="letter-next-btn" style="opacity: 0; pointer-events: none; margin: 15px 0 20px 0; width: 100%;">
+            One Last Thing...
+        </button>
+        
         <div class="letter-content">
             <span id="typewriter-text"></span><span class="cursor"></span>
         </div>
-        <button class="btn" id="letter-next-btn" style="opacity: 0; pointer-events: none;"
-            onclick="nextScreen('screen-proposal')">One Last Thing...</button>
     </div>
 
     <!-- Screen 4: Proposal -->
@@ -322,7 +352,7 @@
 
         const loveLetterText = "Dearest Love of my life, my eyes were created only to search for your beautiful face in every corner of this world, my ears were blessed just so they could melt at the sound of your sweet voice, ";
         const gujaratiText = "jevi ritna Radha Ji e emni drashti kholi hati tyare j jyare Bhagwan Shri Krishna Ji no janam thayo hato evi j ritna tamara aagman thi mari prem ni drashti khuli che";
-        const restText = ", and just like that divine moment, your arrival awakened a love in me I never knew existed because of you, I am not the same person anymore… you have transformed me, my heart, and my entire world into something magical and full of love. 💖, I have a very important question...";
+        const restText = ", and just like that divine moment, your arrival awakened a love in me I never knew existed — because of you, I am not the same person anymore… you have transformed me, my heart, and my entire world into something magical and full of love. 💖, I have a very important question...";
         
         /* --------------------- */
 
@@ -409,7 +439,7 @@
                 currentText = gujaratiText.charAt(charIndex);
                 document.getElementById('typewriter-text').innerHTML += `<span class="gujarati-bold">${currentText}</span>`;
                 charIndex++;
-                setTimeout(type, 40); // Faster for dramatic effect
+                setTimeout(type, 40);
             }
             else if (phase === 2 && charIndex < restText.length) {
                 // Type rest normally
@@ -423,11 +453,11 @@
                 if (phase === 0) {
                     phase = 1;
                     charIndex = 0;
-                    setTimeout(type, 300); // Pause before Gujarati
+                    setTimeout(type, 300);
                 } else if (phase === 1) {
                     phase = 2;
                     charIndex = 0;
-                    setTimeout(type, 500); // Pause after Gujarati
+                    setTimeout(type, 500);
                 } else {
                     // All done - show button
                     const btn = document.getElementById('letter-next-btn');
@@ -439,7 +469,7 @@
             }
         }
 
-        // "No" Button Interaction (slower, stays in viewport)
+        // "No" Button Interaction
         let dodgeCount = 0;
         function dodgeButton() {
             const btn = document.getElementById('noBtn');
